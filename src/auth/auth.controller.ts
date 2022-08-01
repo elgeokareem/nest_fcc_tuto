@@ -1,4 +1,10 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  HttpException,
+  HttpStatus,
+  Post,
+} from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { AuthDTO } from "./dto";
 
@@ -9,7 +15,11 @@ export class AuthController {
   @Post("signup")
   // El body: any en realidad se llama DTO (data transfer object)
   signup(@Body() dto: AuthDTO) {
-    return this.authService.signup(dto);
+    try {
+      return this.authService.signup(dto);
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.FORBIDDEN);
+    }
   }
 
   @Post("signin")
